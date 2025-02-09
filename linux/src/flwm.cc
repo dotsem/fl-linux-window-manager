@@ -1,7 +1,7 @@
 #include <flutter_linux/flutter_linux.h>
+#include <fl_linux_window_manager/fl_linux_window_manager_plugin.h>
+#include <flwm.h>
 
-#include "include/fl_linux_window_manager/fl_linux_window_manager_plugin.h"
-#include "flwm.h"
 
 /**
  * A callback that will be called when the plugin is registered with the Flutter application.

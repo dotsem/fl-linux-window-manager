@@ -12,14 +12,12 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 set(PLUGIN_NAME "fl_linux_window_manager_plugin")
 
 # Find all source files in the src folder.
-file(GLOB_RECURSE SRC_FILES
-  "src/*.cc"
-)
+file(GLOB_RECURSE SRC_FILES "src/*.cc")
 
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} SHARED
-  "flwm.cc" ${SRC_FILES}
+  ${SRC_FILES}
 )
 
 # Symbols are hidden by default to reduce the chance of accidental conflicts
@@ -31,7 +29,7 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
-target_include_directories(${PLUGIN_NAME} INTERFACE
+target_include_directories(${PLUGIN_NAME} PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 
@@ -42,3 +40,7 @@ set(fl_linux_window_manager_bundled_libraries
   ""
   PARENT_SCOPE
 )
+
+# Add the src as the include directory
+target_include_directories(${PLUGIN_NAME} PRIVATE
+  "${CMAKE_CURRENT_SOURCE_DIR}/src")
