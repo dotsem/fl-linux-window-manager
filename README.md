@@ -1,15 +1,5 @@
-# fl_linux_window_manager
+# Flutter Linux Window Manager (FLWM)
 
-A new Flutter plugin project.
+A flutter plugin that can be used to manage windows in linux platform. The plugin's main intension is make flutter suitable for the development of shells for linux window managers (e.g: GNOME Shell).
 
-## Getting Started
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+All necessary features needed to create panels and other shell components using flutter are provided in this plugin.
