@@ -19,7 +19,7 @@ typedef struct {
 FLUTTER_PLUGIN_EXPORT GType fl_linux_window_manager_plugin_get_type();
 
 FLUTTER_PLUGIN_EXPORT void fl_linux_window_manager_plugin_register_with_registrar(
-    FlPluginRegistrar* registrar);
+  FlPluginRegistrar* registrar);
 
 G_END_DECLS
 

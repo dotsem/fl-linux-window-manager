@@ -6,7 +6,7 @@
 
 #include <cstring>
 
-#include "fl_linux_window_manager_plugin_private.h"
+#include "flwm.h"
 
 #define FL_LINUX_WINDOW_MANAGER_PLUGIN(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), fl_linux_window_manager_plugin_get_type(), \
@@ -20,15 +20,16 @@ G_DEFINE_TYPE(FlLinuxWindowManagerPlugin, fl_linux_window_manager_plugin, g_obje
 
 // Called when a method call is received from Flutter.
 static void fl_linux_window_manager_plugin_handle_method_call(
-    FlLinuxWindowManagerPlugin* self,
-    FlMethodCall* method_call) {
+  FlLinuxWindowManagerPlugin* self,
+  FlMethodCall* method_call) {
   g_autoptr(FlMethodResponse) response = nullptr;
 
   const gchar* method = fl_method_call_get_name(method_call);
 
   if (strcmp(method, "getPlatformVersion") == 0) {
     response = get_platform_version();
-  } else {
+  }
+  else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
 
@@ -38,7 +39,7 @@ static void fl_linux_window_manager_plugin_handle_method_call(
 FlMethodResponse* get_platform_version() {
   struct utsname uname_data = {};
   uname(&uname_data);
-  g_autofree gchar *version = g_strdup_printf("Linux %s", uname_data.version);
+  g_autofree gchar* version = g_strdup_printf("Linux %s", uname_data.version);
   g_autoptr(FlValue) result = fl_value_new_string(version);
   return FL_METHOD_RESPONSE(fl_method_success_response_new(result));
 }
@@ -54,23 +55,23 @@ static void fl_linux_window_manager_plugin_class_init(FlLinuxWindowManagerPlugin
 static void fl_linux_window_manager_plugin_init(FlLinuxWindowManagerPlugin* self) {}
 
 static void method_call_cb(FlMethodChannel* channel, FlMethodCall* method_call,
-                           gpointer user_data) {
+  gpointer user_data) {
   FlLinuxWindowManagerPlugin* plugin = FL_LINUX_WINDOW_MANAGER_PLUGIN(user_data);
   fl_linux_window_manager_plugin_handle_method_call(plugin, method_call);
 }
 
 void fl_linux_window_manager_plugin_register_with_registrar(FlPluginRegistrar* registrar) {
   FlLinuxWindowManagerPlugin* plugin = FL_LINUX_WINDOW_MANAGER_PLUGIN(
-      g_object_new(fl_linux_window_manager_plugin_get_type(), nullptr));
+    g_object_new(fl_linux_window_manager_plugin_get_type(), nullptr));
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   g_autoptr(FlMethodChannel) channel =
-      fl_method_channel_new(fl_plugin_registrar_get_messenger(registrar),
-                            "fl_linux_window_manager",
-                            FL_METHOD_CODEC(codec));
+    fl_method_channel_new(fl_plugin_registrar_get_messenger(registrar),
+      "fl_linux_window_manager",
+      FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(channel, method_call_cb,
-                                            g_object_ref(plugin),
-                                            g_object_unref);
+    g_object_ref(plugin),
+    g_object_unref);
 
   g_object_unref(plugin);
 }
