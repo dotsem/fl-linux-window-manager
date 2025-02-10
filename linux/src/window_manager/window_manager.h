@@ -4,6 +4,19 @@
 #include <vector>
 #include <string>
 
+#include <flutter_linux/flutter_linux.h>
+
+/**
+ * @brief Declaration for the function that is used to register the plugins for a
+ * flutter application.
+ *
+ * The definition of this function is in the generated_plugin_registrant.cc file of the
+ * flutter application that register this plugin.
+ *
+ * So the definition of this function is not available in this plugin.
+ */
+void fl_register_plugins(FlPluginRegistry* registry);
+
 namespace FLWM {
     struct Window {
         /**
@@ -18,17 +31,17 @@ namespace FLWM {
     };
 
     enum Layer {
-        BACKGROUND = 1,
-        BOTTOM,
-        TOP,
-        OVERLAY
+        LAYER_BACKGROUND = 1,
+        LAYER_BOTTOM,
+        LAYER_TOP,
+        LAYER_OVERLAY
     };
 
     enum ScreenEdge {
-        TOP = 1 << 0,
-        RIGHT = 1 << 1,
-        BOTTOM = 1 << 2,
-        LEFT = 1 << 3,
+        SCREEN_EDGE_TOP = 1 << 0,
+        SCREEN_EDGE_RIGHT = 1 << 1,
+        SCREEN_EDGE_BOTTOM = 1 << 2,
+        SCREEN_EDGE_LEFT = 1 << 3,
     };
 
     enum KeyboardInteractivity {
@@ -59,7 +72,7 @@ namespace FLWM {
         /**
          * Add a new window to the list of windows managed by the window manager.
          */
-        static void addWindow(Window window);
+        static void addWindow(GtkWindow* window, std::string id);
 
         /**
          * Converts the role of the window to a layer shell surface.
