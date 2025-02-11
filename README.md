@@ -28,3 +28,24 @@ FLWM::WindowManager::convertToLayer(GTK_WINDOW(window));
 ```
 
 5. For all other property changes for the main window, create new window, etc. you can use the Dart API of this plugin.
+
+# Troubleshooting
+
+## Layer is not enabled when running in debug mode on VSCode.
+
+If you are running VS Code as an X11 window, then the environment variable `GDK_BACKEND` will be set to `x11`. This environment variable is used by GTK to determine if it renders the window as a wayland surface or not.
+
+To fix the problem:
+
+- Open your `main.cc` file in `linux` folder.
+- Add the below include statement
+
+```cpp
+#include <stdlib.h>
+```
+
+- Add the code given below to change the env variable and force GTK to use wayland backend. This code must be added at the beginning of `main()` function.
+
+```cpp
+setenv("GDK_BACKEND", "wayland", 1);
+```
