@@ -13,6 +13,15 @@ class FlLinuxWindowManager {
   final MethodChannel _methodChannel =
       const MethodChannel('fl_linux_window_manager');
 
+  /// Private constructor
+  FlLinuxWindowManager._();
+
+  /// The single instance of the class
+  static final FlLinuxWindowManager _instance = FlLinuxWindowManager._();
+
+  /// Getter for the single instance of the class
+  static FlLinuxWindowManager get instance => _instance;
+
   /// Create a window with the given title, width, and height.
   ///
   /// The [title] is the title of the window.
