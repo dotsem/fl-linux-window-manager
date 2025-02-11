@@ -55,10 +55,6 @@ static void my_application_activate(GApplication* application) {
   gtk_window_set_default_size(window, 1280, 720);
 
   FLWM::WindowManager::convertToLayer(GTK_WINDOW(window));
-  FLWM::WindowManager::addWindow(window, "main");
-  FLWM::WindowManager manager("main");
-  manager.setSize(1280, 720);
-  manager.setTitle("fl_linux_window_manager_example");
 
   gtk_widget_show(GTK_WIDGET(window));
 
