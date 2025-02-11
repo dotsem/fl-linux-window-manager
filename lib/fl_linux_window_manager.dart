@@ -2,7 +2,7 @@ import 'package:fl_linux_window_manager/models/keyboard_mode.dart';
 import 'package:fl_linux_window_manager/models/layer.dart';
 import 'package:flutter/services.dart';
 
-class MethodChannelFlLinuxWindowManager {
+class FlLinuxWindowManager {
   /// The ID of the main window of the app.
   static const String _mainWindowId = 'main';
 
