@@ -7,6 +7,13 @@ All necessary features needed to create panels and other shell components using 
 # Usage
 
 1. To use this plugin, first add this plugin to your application dependencies.
+
+```yaml
+fl_linux_window_manager:
+  git:
+    url: git@github.com:moduluz-io/fl-linux-window-manager.git
+```
+
 2. Open the `my_application.cc` from your flutter app's `linux` folder
 3. Import the required header files at the top of this file
 
