@@ -30,27 +30,27 @@ namespace FLWM {
         GtkWindow* window;
     };
 
-    enum Layer {
+    enum __attribute__((visibility("default"))) Layer {
         LAYER_BACKGROUND = 1,
-        LAYER_BOTTOM,
-        LAYER_TOP,
-        LAYER_OVERLAY
+            LAYER_BOTTOM,
+            LAYER_TOP,
+            LAYER_OVERLAY
     };
 
-    enum ScreenEdge {
+    enum __attribute__((visibility("default"))) ScreenEdge {
         SCREEN_EDGE_TOP = 1 << 0,
-        SCREEN_EDGE_RIGHT = 1 << 1,
-        SCREEN_EDGE_BOTTOM = 1 << 2,
-        SCREEN_EDGE_LEFT = 1 << 3,
+            SCREEN_EDGE_RIGHT = 1 << 1,
+            SCREEN_EDGE_BOTTOM = 1 << 2,
+            SCREEN_EDGE_LEFT = 1 << 3,
     };
 
-    enum KeyboardInteractivity {
+    enum __attribute__((visibility("default"))) KeyboardInteractivity {
         NONE,
-        EXCLUSIVE,
-        ON_DEMAND
+            EXCLUSIVE,
+            ON_DEMAND
     };
 
-    class WindowManager {
+    class __attribute__((visibility("default"))) WindowManager {
     public:
         /**
          * Create a new window manager instance for the given window ID.
@@ -72,12 +72,12 @@ namespace FLWM {
         /**
          * Add a new window to the list of windows managed by the window manager.
          */
-        static void addWindow(GtkWindow* window, std::string id);
+        static void addWindow(GtkWindow * window, std::string id);
 
         /**
          * Converts the role of the window to a layer shell surface.
          */
-        static void convertToLayer(GtkWindow* window);
+        static void convertToLayer(GtkWindow * window);
 
         static void createWindow(std::string id,
             std::string title,

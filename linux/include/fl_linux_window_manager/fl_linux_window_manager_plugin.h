@@ -1,6 +1,7 @@
 #pragma once
 
 #include <flutter_linux/flutter_linux.h>
+#include "../../src/window_manager/window_manager.h"
 
 #ifdef FLUTTER_PLUGIN_IMPL
 #define FLUTTER_PLUGIN_EXPORT __attribute__((visibility("default")))
