@@ -2,7 +2,6 @@ name: fl_linux_window_manager
 description: "Manage platform window of flutter application on linux"
 version: 1.0.0
 homepage: https://moduluz.io
-publish_to: https://pub.dev
 repository: https://github.com/moduluz-io/fl-linux-window-manager.git
 issue_tracker: https://github.com/moduluz-io/fl-linux-window-manager/issues
 topics:
