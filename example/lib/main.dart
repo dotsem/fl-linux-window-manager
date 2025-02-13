@@ -1,7 +1,10 @@
+import 'package:fl_linux_window_manager/fl_linux_window_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-void main() {
+void main(List<String> args) {
+  print("Args received: $args");
+
   runApp(const MyApp());
 }
 
@@ -47,7 +50,24 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            spacing: 10,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Running on: $_platformVersion\n'),
+              ElevatedButton(
+                onPressed: () {
+                  FlLinuxWindowManager.instance.createWindow(
+                    title: "Sample",
+                    width: 500,
+                    height: 300,
+                    args: ["--class=sample", "--name=sample"],
+                  );
+                },
+                child: const Text('Create Window'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -137,7 +137,8 @@ void FLWM::WindowManager::createWindow(
     std::string title,
     unsigned int width,
     unsigned int height,
-    bool isLayer) {
+    bool isLayer,
+    std::vector<std::string> args) {
 
     /// Check if the ID is already taken
     for (Window window : windows) {
@@ -157,13 +158,11 @@ void FLWM::WindowManager::createWindow(
     /// Add the window to the list of windows
     addWindow(newWindow, id);
 
-
     /// Set the default size of the window
     gtk_window_set_default_size(GTK_WINDOW(newWindow), width, height);
 
     FLWM::WindowManager manager = FLWM::WindowManager(id);
     manager.setSize(width, height);
-    manager.enableTransparency();
 
     if (isLayer) {
         convertToLayer(newWindow);
@@ -184,14 +183,20 @@ void FLWM::WindowManager::createWindow(
     /// CLI arguments to be passed to the dart entrypoint main() function
     /// The last item in this array must be a NULL pointer, to indicate the end of the array items.
     /// Otherwise errors will occur.
-    int cli_args_size = 1;
+    int cli_args_size = args.size() + 1;
     char** cli_args = new char* [cli_args_size];
+
+    for (size_t i = 0; i < args.size(); ++i) {
+        cli_args[i] = new char[args[i].size() + 1];
+        strcpy(cli_args[i], args[i].c_str());
+    }
 
     /// CLI arguments list must be terminated with a NULL pointer
     /// Otherwise, the dart VM will crash
     cli_args[cli_args_size - 1] = nullptr;
 
     fl_dart_project_set_dart_entrypoint_arguments(project, cli_args);
+
 
     FlView* view = fl_view_new(project);
     gtk_widget_show(GTK_WIDGET(view));
@@ -203,6 +208,9 @@ void FLWM::WindowManager::createWindow(
     gtk_widget_grab_focus(GTK_WIDGET(view));
 
     /// Free the CLI args array
+    for (size_t i = 0; i < args.size(); ++i) {
+        delete[] cli_args[i];
+    }
     delete[] cli_args;
 }
 

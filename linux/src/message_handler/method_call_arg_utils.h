@@ -2,6 +2,9 @@
 
 #include <flutter_linux/flutter_linux.h>
 
+#include <vector>
+#include <string>
+
 namespace FLWM {
     /**
      * This is a utility class used to get the arguments from the method call from
@@ -52,6 +55,16 @@ namespace FLWM {
          * return bool  The boolean argument extracted from the method call.
          */
         static bool getBool(FlMethodCall* methodCall, const char* argumentName);
+
+        /**
+         * @brief Get the list of strings from the method call.
+         *
+         * @param methodCall  The method call from which the argument needs to be extracted.
+         * @param argumentName  The name of the argument that needs to be extracted.
+         *
+         * return std::vector<std::string>  The list of strings extracted from the method call.
+         */
+        static std::vector<std::string> getStringList(FlMethodCall* methodCall, const char* argumentName);
 
     private:
         /**

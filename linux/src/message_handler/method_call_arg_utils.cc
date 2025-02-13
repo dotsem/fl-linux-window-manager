@@ -46,6 +46,23 @@ bool FLWM::MethodCallArgUtils::getBool(FlMethodCall* method_call, const char* ar
     return fl_value_get_bool(argument);
 }
 
+std::vector<std::string> FLWM::MethodCallArgUtils::getStringList(FlMethodCall* methodCall, const char* argumentName) {
+    if (!hasArgument(methodCall, argumentName, FL_VALUE_TYPE_LIST)) {
+        return std::vector<std::string>();
+    }
+
+    FlValue* argsMap = fl_method_call_get_args(methodCall);
+    FlValue* argument = fl_value_lookup_string(argsMap, argumentName);
+
+    std::vector<std::string> stringList;
+    for (size_t i = 0; i < fl_value_get_length(argument); ++i) {
+        FlValue* value = fl_value_get_list_value(argument, i);
+        stringList.push_back(fl_value_get_string(value));
+    }
+
+    return stringList;
+}
+
 bool FLWM::MethodCallArgUtils::hasArgument(FlMethodCall* method_call,
     const char* argument_name, FlValueType argument_type) {
     /// Get the arguments map from the method call.

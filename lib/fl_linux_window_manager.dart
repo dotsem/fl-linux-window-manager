@@ -37,6 +37,7 @@ class FlLinuxWindowManager {
     required int width,
     required int height,
     bool isLayer = false,
+    List<String> args = const [],
     String? windowId,
   }) async {
     /// Setup the window ID for the new window
@@ -50,6 +51,7 @@ class FlLinuxWindowManager {
       'width': width,
       'height': height,
       'isLayer': isLayer,
+      'args': args,
       'windowId': windowId,
     });
 
@@ -109,10 +111,10 @@ class FlLinuxWindowManager {
   /// The [bottom] is the bottom margin of the layer.
   /// The [windowId] is the ID of the window.
   Future<void> setLayerMargin({
-    required int left,
-    required int top,
-    required int right,
-    required int bottom,
+    int left = 0,
+    int top = 0,
+    int right = 0,
+    int bottom = 0,
     String windowId = _mainWindowId,
   }) {
     return _methodChannel.invokeMethod('setLayerMargin', {
@@ -129,9 +131,11 @@ class FlLinuxWindowManager {
   /// The [anchor] is the anchor for the layer. (This must be an integer representation of the ScreenEdge enum)
   /// We can use multiple anchors by using the bitwise OR operator on the ScreenEdge enum values.
   ///
+  /// If set to 0, then all anchors will be cleared.
+  ///
   /// The [windowId] is the ID of the window.
   Future<void> setLayerAnchor({
-    required int anchor,
+    int anchor = 0,
     String windowId = _mainWindowId,
   }) {
     return _methodChannel.invokeMethod('setLayerAnchor', {
