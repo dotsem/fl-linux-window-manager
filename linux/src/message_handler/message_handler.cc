@@ -16,7 +16,6 @@ void messageHandler(
 
         /// The ID of the window that needs to be used for performing the action
         const char* windowId = FLWM::MethodCallArgUtils::getString(methodCall, "windowId");
-        FLWM::WindowManager manager(windowId);
 
         if (strcmp(methodName, "createWindow") == 0) {
             std::string title = FLWM::MethodCallArgUtils::getString(methodCall, "title");
@@ -25,25 +24,29 @@ void messageHandler(
             bool isLayer = FLWM::MethodCallArgUtils::getBool(methodCall, "isLayer");
             std::vector<std::string> args = FLWM::MethodCallArgUtils::getStringList(methodCall, "args");
 
-            manager.createWindow(windowId, title, width, height, isLayer, args);
+            FLWM::WindowManager::createWindow(windowId, title, width, height, isLayer, args);
         }
         else if (strcmp(methodName, "setLayer") == 0) {
+            FLWM::WindowManager manager(windowId);
             FLWM::Layer layer = (FLWM::Layer)FLWM::MethodCallArgUtils::getInt(methodCall, "layer");
 
             manager.setLayer(layer);
         }
         else if (strcmp(methodName, "setSize") == 0) {
+            FLWM::WindowManager manager(windowId);
             unsigned int width = FLWM::MethodCallArgUtils::getInt(methodCall, "width");
             unsigned int height = FLWM::MethodCallArgUtils::getInt(methodCall, "height");
 
             manager.setSize(width, height);
         }
         else if (strcmp(methodName, "setTitle") == 0) {
+            FLWM::WindowManager manager(windowId);
             std::string title = FLWM::MethodCallArgUtils::getString(methodCall, "title");
 
             manager.setTitle(title);
         }
         else if (strcmp(methodName, "setLayerMargin") == 0) {
+            FLWM::WindowManager manager(windowId);
             unsigned int top = FLWM::MethodCallArgUtils::getInt(methodCall, "top");
             unsigned int right = FLWM::MethodCallArgUtils::getInt(methodCall, "right");
             unsigned int bottom = FLWM::MethodCallArgUtils::getInt(methodCall, "bottom");
@@ -52,33 +55,40 @@ void messageHandler(
             manager.setLayerMargin(top, right, bottom, left);
         }
         else if (strcmp(methodName, "setLayerAnchor") == 0) {
+            FLWM::WindowManager manager(windowId);
             int anchor = FLWM::MethodCallArgUtils::getInt(methodCall, "anchor");
 
             manager.setLayerAnchor(anchor);
         }
         else if (strcmp(methodName, "enableTransparency") == 0) {
+            FLWM::WindowManager manager(windowId);
             manager.enableTransparency();
         }
         else if (strcmp(methodName, "setIsDecorated") == 0) {
+            FLWM::WindowManager manager(windowId);
             bool isDecorated = FLWM::MethodCallArgUtils::getBool(methodCall, "isDecorated");
 
             manager.setIsDecorated(isDecorated);
         }
         else if (strcmp(methodName, "setKeyboardInteractivity") == 0) {
+            FLWM::WindowManager manager(windowId);
             FLWM::KeyboardInteractivity interactivity =
                 (FLWM::KeyboardInteractivity)FLWM::MethodCallArgUtils::getInt(methodCall, "interactivity");
 
             manager.setKeyboardInteractivity(interactivity);
         }
         else if (strcmp(methodName, "enableLayerAutoExclusive") == 0) {
+            FLWM::WindowManager manager(windowId);
             manager.enableLayerAutoExclusive();
         }
         else if (strcmp(methodName, "setLayerExclusiveZone") == 0) {
+            FLWM::WindowManager manager(windowId);
             int length = FLWM::MethodCallArgUtils::getInt(methodCall, "length");
 
             manager.setLayerExclusiveZone(length);
         }
         else if (strcmp(methodName, "closeWindow") == 0) {
+            FLWM::WindowManager manager(windowId);
             manager.closeWindow();
         }
         else {
