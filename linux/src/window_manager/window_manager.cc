@@ -296,6 +296,17 @@ void FLWM::WindowManager::closeWindow() {
             break;
         }
     }
+
+    /// Free the window object
+    window.id = "";
+    window.window = nullptr;
+
+    /// Clear the method channels for this window
+    for (auto const& [key, val] : window.methodChannels) {
+        fl_method_channel_set_method_call_handler(val, NULL, NULL, NULL);
+        g_object_unref(val);
+    }
+    window.methodChannels.clear();
 }
 
 void FLWM::WindowManager::hideWindow() {
@@ -304,4 +315,27 @@ void FLWM::WindowManager::hideWindow() {
 
 void FLWM::WindowManager::showWindow() {
     gtk_widget_show(GTK_WIDGET(window.window));
+}
+
+void FLWM::WindowManager::createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler) {
+    /// Get the flutter view from the window. This is used as the registrar for getting the messenger.
+    GtkWindow* gtkWindow = window.window;
+    GtkWidget* flView = GTK_WIDGET(gtk_container_get_children(GTK_CONTAINER(gtkWindow))->data);
+    FlPluginRegistrar* registrar = FL_PLUGIN_REGISTRAR(flView);
+
+    g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
+    g_autoptr(FlMethodChannel) channel =
+        fl_method_channel_new(fl_plugin_registrar_get_messenger(registrar),
+            channelName.c_str(),
+            FL_METHOD_CODEC(codec));
+
+    fl_method_channel_set_method_call_handler(channel, handler, NULL, NULL);
+}
+
+void FLWM::WindowManager::sendMethodCall(std::string channelName, std::string methodName, FlValue* data) {
+    /// Get the method channel from the window 
+    FlMethodChannel* channel = window.methodChannels[channelName];
+
+    /// Send the method call to the channel
+    fl_method_channel_invoke_method(channel, methodName.c_str(), data, NULL, NULL, NULL);
 }

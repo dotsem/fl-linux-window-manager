@@ -3,6 +3,7 @@
 #include <gtk/gtk.h>
 #include <vector>
 #include <string>
+#include <map>
 
 #include <flutter_linux/flutter_linux.h>
 
@@ -28,6 +29,11 @@ namespace FLWM {
          * The actual GTK window object that is created by the window manager.
          */
         GtkWindow* window;
+
+        /**
+         * Stores the method channels created by the user for this window.
+         */
+        std::map<std::string, FlMethodChannel*> methodChannels;
     };
 
     enum __attribute__((visibility("default"))) Layer {
@@ -151,5 +157,15 @@ namespace FLWM {
          * Show a window that is already hidden.
          */
         void showWindow();
+
+        /**
+         * Create a new method channel in the platform side for this window.
+         */
+        void createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler);
+
+        /**
+         * Send a method call to the given channel.
+         */
+        void sendMethodCall(std::string channelName, std::string methodName, FlValue * data);
     };
 }
