@@ -66,6 +66,11 @@ class _MyAppState extends State<MyApp> {
                 },
                 child: const Text('Create Window'),
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    FlLinuxWindowManager.instance.hideWindow();
+                  },
+                  child: const Text('Hide Window')),
             ],
           ),
         ),

@@ -141,5 +141,10 @@ namespace FLWM {
          * Close the window and free all resources associated with the window.
          */
         void closeWindow();
+
+        /**
+         * Hide the window from the screen.
+         */
+        void hideWindow();
     };
 }

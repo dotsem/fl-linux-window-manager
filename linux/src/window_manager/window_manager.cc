@@ -297,3 +297,7 @@ void FLWM::WindowManager::closeWindow() {
         }
     }
 }
+
+void FLWM::WindowManager::hideWindow() {
+    gtk_widget_hide(GTK_WIDGET(window.window));
+}

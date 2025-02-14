@@ -211,4 +211,13 @@ class FlLinuxWindowManager {
       'windowId': windowId,
     });
   }
+
+  /// Hides and window with the given window ID.
+  ///
+  /// The [windowId] is the ID of the window.
+  Future<void> hideWindow({String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('hideWindow', {
+      'windowId': windowId,
+    });
+  }
 }
