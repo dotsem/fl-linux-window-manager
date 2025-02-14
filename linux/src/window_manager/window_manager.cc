@@ -301,3 +301,7 @@ void FLWM::WindowManager::closeWindow() {
 void FLWM::WindowManager::hideWindow() {
     gtk_widget_hide(GTK_WIDGET(window.window));
 }
+
+void FLWM::WindowManager::showWindow() {
+    gtk_widget_show(GTK_WIDGET(window.window));
+}

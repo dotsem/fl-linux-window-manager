@@ -220,4 +220,14 @@ class FlLinuxWindowManager {
       'windowId': windowId,
     });
   }
+
+  /// Shows the window with the given window ID.
+  /// If the window is hidden, then it will be shown.
+  ///
+  /// The [windowId] is the ID of the window.
+  Future<void> showWindow({String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('showWindow', {
+      'windowId': windowId,
+    });
+  }
 }

@@ -146,5 +146,10 @@ namespace FLWM {
          * Hide the window from the screen.
          */
         void hideWindow();
+
+        /**
+         * Show a window that is already hidden.
+         */
+        void showWindow();
     };
 }

@@ -95,6 +95,10 @@ void messageHandler(
             FLWM::WindowManager manager(windowId);
             manager.hideWindow();
         }
+        else if (strcmp(methodName, "showWindow") == 0) {
+            FLWM::WindowManager manager(windowId);
+            manager.showWindow();
+        }
         else {
             std::cerr << "Method not implemented: " << methodName << std::endl;
             fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::methodNotImplementedError(), NULL);

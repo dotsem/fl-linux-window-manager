@@ -58,6 +58,7 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () {
                   FlLinuxWindowManager.instance.createWindow(
+                    windowId: "new_window",
                     title: "Sample",
                     width: 500,
                     height: 300,
@@ -68,9 +69,16 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    FlLinuxWindowManager.instance.hideWindow();
+                    FlLinuxWindowManager.instance
+                        .hideWindow(windowId: "new_window");
                   },
                   child: const Text('Hide Window')),
+              ElevatedButton(
+                  onPressed: () {
+                    FlLinuxWindowManager.instance
+                        .showWindow(windowId: "new_window");
+                  },
+                  child: const Text('Show Window')),
             ],
           ),
         ),
