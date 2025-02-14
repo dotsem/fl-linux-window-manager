@@ -5,6 +5,39 @@
 #include <message_handler/method_call_arg_utils.h>
 #include <message_handler/method_response_utils.h>
 
+struct SharedChannelHandlerData {
+    /// The window ID to whcich the method call needs to be forwarded.
+    std::string forwardWindowId;
+
+    /// The channel name that needs to be used for forwarding the method call.
+    std::string channelName;
+};
+
+/**
+ * A proxy method handler that forwards the method call to the given window.
+ */
+void sharedMethodChannelHandler(
+    FlMethodChannel* channel,
+    FlMethodCall* methodCall,
+    gpointer userData) {
+    try {
+        const char* methodName = fl_method_call_get_name(methodCall);
+        SharedChannelHandlerData* handlerData = (SharedChannelHandlerData*)userData;
+
+        /// Forward the method call into the given window
+        FLWM::WindowManager manager(handlerData->forwardWindowId);
+        manager.sendMethodCall(handlerData->channelName, methodName, fl_method_call_get_args(methodCall));
+
+        fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::successResponse(), NULL);
+    }
+    catch (...) {
+        std::cerr << "An error occurred in while handling shared method channel message" << std::endl;
+        g_autoptr(FlMethodErrorResponse) error =
+            fl_method_error_response_new("method_not_implemented", "Method not implemented", nullptr);
+        fl_method_call_respond(methodCall, FL_METHOD_RESPONSE(error), nullptr);
+    }
+}
+
 void messageHandler(
     FlMethodChannel* channel,
     FlMethodCall* methodCall,
@@ -17,7 +50,25 @@ void messageHandler(
         /// The ID of the window that needs to be used for performing the action
         const char* windowId = FLWM::MethodCallArgUtils::getString(methodCall, "windowId");
 
-        if (strcmp(methodName, "createWindow") == 0) {
+        if (strcmp(methodName, "createSharedMethodChannel") == 0) {
+            std::string channelName = FLWM::MethodCallArgUtils::getString(methodCall, "channelName");
+            std::string shareWithWindowId = FLWM::MethodCallArgUtils::getString(methodCall, "shareWithWindowId");
+
+            SharedChannelHandlerData* destHandlerData = new SharedChannelHandlerData();
+            destHandlerData->forwardWindowId = shareWithWindowId;
+            destHandlerData->channelName = channelName;
+
+            FLWM::WindowManager managerDest(shareWithWindowId);
+            managerDest.createMethodChannel(channelName, sharedMethodChannelHandler, destHandlerData);
+
+            SharedChannelHandlerData* srcHandlerData = new SharedChannelHandlerData();
+            srcHandlerData->forwardWindowId = std::string(windowId);
+            srcHandlerData->channelName = channelName;
+
+            FLWM::WindowManager managerSrc(windowId);
+            managerSrc.createMethodChannel(channelName, sharedMethodChannelHandler, srcHandlerData);
+        }
+        else if (strcmp(methodName, "createWindow") == 0) {
             std::string title = FLWM::MethodCallArgUtils::getString(methodCall, "title");
             unsigned int width = FLWM::MethodCallArgUtils::getInt(methodCall, "width");
             unsigned int height = FLWM::MethodCallArgUtils::getInt(methodCall, "height");

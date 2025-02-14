@@ -230,4 +230,25 @@ class FlLinuxWindowManager {
       'windowId': windowId,
     });
   }
+
+  /// Creates a shared method channel with the given window, so that we an communicate with the window.
+  /// The window must be created before calling this method.
+  ///
+  /// The [channelName] is the name of the new channel.
+  /// The [shareWithWindowId] is the ID of the window to share the channel with.
+  /// The [windowId] is the ID of the current window.
+  Future<void> createSharedMethodChannel(
+      {required String channelName,
+      required String shareWithWindowId,
+      String windowId = _mainWindowId}) {
+    if (windowId == shareWithWindowId) {
+      throw Exception('Cannot share a channel with the same window');
+    }
+
+    return _methodChannel.invokeMethod('createSharedMethodChannel', {
+      'channelName': channelName,
+      'shareWithWindowId': shareWithWindowId,
+      'windowId': windowId,
+    });
+  }
 }

@@ -2,8 +2,20 @@ import 'package:fl_linux_window_manager/fl_linux_window_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/services.dart';
+
+MethodChannel channel = MethodChannel('shared_example');
+
 void main(List<String> args) {
+  WidgetsFlutterBinding.ensureInitialized();
+
   print("Args received: $args");
+
+  if (args.isEmpty) {
+    channel.setMethodCallHandler((call) async {
+      print("Received call in main window: ${call.method}");
+    });
+  }
 
   runApp(const MyApp());
 }
@@ -79,6 +91,17 @@ class _MyAppState extends State<MyApp> {
                         .showWindow(windowId: "new_window");
                   },
                   child: const Text('Show Window')),
+              ElevatedButton(
+                  onPressed: () async {
+                    await FlLinuxWindowManager.instance
+                        .createSharedMethodChannel(
+                            channelName: "shared_example",
+                            shareWithWindowId: "main",
+                            windowId: "new_window");
+
+                    channel.invokeMethod("SampleMethodName");
+                  },
+                  child: Text("Create shared message"))
             ],
           ),
         ),

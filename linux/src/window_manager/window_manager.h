@@ -64,15 +64,15 @@ namespace FLWM {
         WindowManager(std::string id);
     private:
         /**
-         * A list of all windows created by this application. This is used to keep track of all windows
+         * A map of all windows created by this application. This is used to keep track of all windows
          * and manage them accordingly.
          */
-        static std::vector<Window> windows;
+        static std::map<std::string, Window> windows;
 
         /**
          * The window that needs to be managed, by this instance of window manager.
          */
-        Window window;
+        Window* window;
 
     public:
         /**
@@ -161,11 +161,11 @@ namespace FLWM {
         /**
          * Create a new method channel in the platform side for this window.
          */
-        void createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler);
+        void createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler, void* userData);
 
         /**
          * Send a method call to the given channel.
          */
-        void sendMethodCall(std::string channelName, std::string methodName, FlValue * data);
+        void sendMethodCall(std::string channelName, std::string methodName, FlValue * args);
     };
 }
