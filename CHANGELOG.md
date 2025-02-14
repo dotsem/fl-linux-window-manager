@@ -5,3 +5,11 @@ Initial stable release with basic window/layer management features.
 - Multi window support.
 - Manage layer surface properties of window.
 - Manage window properties like decoration, size, title, etc.
+
+## 1.1.0
+
+Bug fixes for multi-window creation, new features for multi-window communication.
+
+- Fixed crashes while creating multiple windows.
+- Added SharedMethodChannel feature to implement communication between windows in the same process.
+- Added window hide/show feature.
