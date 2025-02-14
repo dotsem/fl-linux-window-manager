@@ -58,15 +58,15 @@ void messageHandler(
             destHandlerData->forwardWindowId = shareWithWindowId;
             destHandlerData->channelName = channelName;
 
-            FLWM::WindowManager managerDest(shareWithWindowId);
-            managerDest.createMethodChannel(channelName, sharedMethodChannelHandler, destHandlerData);
-
             SharedChannelHandlerData* srcHandlerData = new SharedChannelHandlerData();
             srcHandlerData->forwardWindowId = std::string(windowId);
             srcHandlerData->channelName = channelName;
 
             FLWM::WindowManager managerSrc(windowId);
-            managerSrc.createMethodChannel(channelName, sharedMethodChannelHandler, srcHandlerData);
+            FLWM::WindowManager managerDest(shareWithWindowId);
+
+            managerSrc.createMethodChannel(channelName, sharedMethodChannelHandler, destHandlerData);
+            managerDest.createMethodChannel(channelName, sharedMethodChannelHandler, srcHandlerData);
         }
         else if (strcmp(methodName, "createWindow") == 0) {
             std::string title = FLWM::MethodCallArgUtils::getString(methodCall, "title");
