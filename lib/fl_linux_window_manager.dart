@@ -251,4 +251,49 @@ class FlLinuxWindowManager {
       'windowId': windowId,
     });
   }
+
+  /// Set infinite input region for the window with the given window ID.
+  ///
+  /// The [windowId] is the ID of the window.
+  Future<void> setInfiniteInputRegion({String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setInfiniteInputRegion', {
+      'windowId': windowId,
+    });
+  }
+
+  /// Add a given rect to the input region of the window with the given window ID.
+  /// The rect is relative to the window.
+  ///
+  /// The [inputRegion] is the rect to add to the input region.
+  /// The [windowId] is the ID of the window.
+  Future<void> addInputRegion({
+    required Rect inputRegion,
+    String windowId = _mainWindowId,
+  }) {
+    return _methodChannel.invokeMethod('addInputRegion', {
+      'x': inputRegion.left,
+      'y': inputRegion.top,
+      'width': inputRegion.width,
+      'height': inputRegion.height,
+      'windowId': windowId,
+    });
+  }
+
+  /// Subtract a given rect from the input region of the window with the given window ID.
+  /// The rect is relative to the window.
+  ///
+  /// The [inputRegion] is the rect to subtract from the input region.
+  /// The [windowId] is the ID of the window.
+  Future<void> subtractInputRegion({
+    required Rect inputRegion,
+    String windowId = _mainWindowId,
+  }) {
+    return _methodChannel.invokeMethod('subtractInputRegion', {
+      'x': inputRegion.left,
+      'y': inputRegion.top,
+      'width': inputRegion.width,
+      'height': inputRegion.height,
+      'windowId': windowId,
+    });
+  }
 }

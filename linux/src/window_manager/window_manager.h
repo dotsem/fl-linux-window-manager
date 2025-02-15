@@ -6,6 +6,7 @@
 #include <map>
 
 #include <flutter_linux/flutter_linux.h>
+#include <wayland-client.h>
 
 /**
  * @brief Declaration for the function that is used to register the plugins for a
@@ -29,6 +30,12 @@ namespace FLWM {
          * The actual GTK window object that is created by the window manager.
          */
         GtkWindow* window;
+
+        /**
+         * The input region associated with the window. This is used to control the area of the
+         * window that can receive input events.
+         */
+        wl_region* inputRegion;
 
         /**
          * Stores the method channels created by the user for this window.
@@ -62,12 +69,18 @@ namespace FLWM {
          * Create a new window manager instance for the given window ID.
          */
         WindowManager(std::string id);
+
+        /**
+         * The compositor object that is used to create the wayland objects.
+         */
+        static wl_compositor* compositor;
     private:
         /**
          * A map of all windows created by this application. This is used to keep track of all windows
          * and manage them accordingly.
          */
         static std::map<std::string, Window> windows;
+
 
         /**
          * The window that needs to be managed, by this instance of window manager.
@@ -167,5 +180,22 @@ namespace FLWM {
          * Send a method call to the given channel.
          */
         void sendMethodCall(std::string channelName, std::string methodName, FlValue * args);
+
+        /**
+         * Disable inputs for the window.
+         */
+        void setInfinteInputRegion();
+
+        /**
+         * Add the given region to the input region of the window.
+         * If the window already have infinte input region, then this will remove the infinite input region
+         * and add the given region.
+         */
+        void addInputRegion(int x, int y, int width, int height);
+
+        /**
+         * Subtract the given region from the input region of the window.
+         */
+        void subtractInputRegion(int x, int y, int width, int height);
     };
 }

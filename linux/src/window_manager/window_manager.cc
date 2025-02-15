@@ -1,6 +1,8 @@
 
 #include <iostream>
+#include <string.h>
 
+#include <gdk/gdkwayland.h>
 #include <window_manager/window_manager.h>
 #include <gtk-layer-shell/gtk-layer-shell.h>
 #include <protocol_bindings/wlr_layer_shell_protocol_client.h>
@@ -9,8 +11,33 @@
  * Static member initialization
  */
 std::map<std::string, FLWM::Window>  FLWM::WindowManager::windows;
+wl_compositor* FLWM::WindowManager::compositor = NULL;
+
+void _registryHandler(void* data, struct wl_registry* registry,
+  uint32_t id, const char* interface, uint32_t version) {
+  if (strcmp(interface, "wl_compositor") == 0) {
+    FLWM::WindowManager::compositor =
+      (wl_compositor*)wl_registry_bind(registry, id, &wl_compositor_interface, 1);
+  }
+}
 
 void FLWM::WindowManager::addWindow(GtkWindow* window, std::string id) {
+  /// Initialize the wayland objects.
+  if (FLWM::WindowManager::compositor == NULL) {
+
+    GdkDisplay* gdk_display = gtk_widget_get_display(GTK_WIDGET(window));
+    struct wl_display* wl_display = gdk_wayland_display_get_wl_display(gdk_display);
+
+    struct wl_registry* registry = wl_display_get_registry(wl_display);
+    static const struct wl_registry_listener registry_listener = {
+        .global = _registryHandler,
+        .global_remove = [](void* data, struct wl_registry* registry, uint32_t name) {},
+    };
+    wl_registry_add_listener(registry, &registry_listener, NULL);
+    /// Wait for fetching the registry data binding.
+    wl_display_roundtrip(wl_display);
+  }
+
   /// Check if the window is already added to the list of windows.
   if (windows.find(id) != windows.end()) {
     return;
@@ -21,6 +48,7 @@ void FLWM::WindowManager::addWindow(GtkWindow* window, std::string id) {
   newWindow.id = id;
   newWindow.window = window;
   newWindow.methodChannels = std::map<std::string, FlMethodChannel*>();
+  newWindow.inputRegion = NULL;
 
   windows[id] = newWindow;
 }
@@ -273,6 +301,11 @@ void FLWM::WindowManager::setLayerExclusiveZone(int length) {
 }
 
 void FLWM::WindowManager::closeWindow() {
+  /// Destroy the input region if it is not NULL
+  if (window->inputRegion != NULL) {
+    wl_region_destroy(window->inputRegion);
+  }
+
   GtkWidget* fl_view = GTK_WIDGET(gtk_container_get_children(GTK_CONTAINER(window->window))->data);
   gtk_container_remove(GTK_CONTAINER(window->window), fl_view);
   gtk_window_close(window->window);
@@ -340,4 +373,46 @@ void FLWM::WindowManager::sendMethodCall(
 
   /// Send the method call to the channel
   fl_method_channel_invoke_method(channel, methodName.c_str(), args, NULL, NULL, NULL);
+}
+
+void FLWM::WindowManager::setInfinteInputRegion() {
+  if (window->inputRegion != NULL) {
+    wl_region_destroy(window->inputRegion);
+    window->inputRegion = NULL;
+  }
+
+  /// Set the input region to NULL for the window
+  GdkWindow* gdkWindow = gtk_widget_get_window(GTK_WIDGET(window->window));
+  struct wl_surface* wlSurface = gdk_wayland_window_get_wl_surface(gdkWindow);
+
+  wl_surface_set_input_region(wlSurface, NULL);
+}
+
+void FLWM::WindowManager::addInputRegion(int x, int y, int width, int height) {
+  if (window->inputRegion == NULL) {
+    window->inputRegion = wl_compositor_create_region(FLWM::WindowManager::compositor);
+  }
+
+  wl_region_add(window->inputRegion, x, y, width, height);
+
+  /// Set the input region to the window
+  GdkWindow* gdkWindow = gtk_widget_get_window(GTK_WIDGET(window->window));
+  struct wl_surface* wlSurface = gdk_wayland_window_get_wl_surface(gdkWindow);
+
+  wl_surface_set_input_region(wlSurface, window->inputRegion);
+}
+
+void FLWM::WindowManager::subtractInputRegion(int x, int y, int width, int height) {
+  if (window->inputRegion == NULL) {
+    window->inputRegion = wl_compositor_create_region(FLWM::WindowManager::compositor);
+    wl_region_add(window->inputRegion, 0, 0, INT32_MAX, INT32_MAX);
+  }
+
+  wl_region_subtract(window->inputRegion, x, y, width, height);
+
+  /// Set the input region to the window
+  GdkWindow* gdkWindow = gtk_widget_get_window(GTK_WIDGET(window->window));
+  struct wl_surface* wlSurface = gdk_wayland_window_get_wl_surface(gdkWindow);
+
+  wl_surface_set_input_region(wlSurface, window->inputRegion);
 }

@@ -150,6 +150,28 @@ void messageHandler(
             FLWM::WindowManager manager(windowId);
             manager.showWindow();
         }
+        else if (strcmp(methodName, "setInfinteInputRegion") == 0) {
+            FLWM::WindowManager manager(windowId);
+            manager.setInfinteInputRegion();
+        }
+        else if (strcmp(methodName, "addInputRegion") == 0) {
+            FLWM::WindowManager manager(windowId);
+            int x = FLWM::MethodCallArgUtils::getInt(methodCall, "x");
+            int y = FLWM::MethodCallArgUtils::getInt(methodCall, "y");
+            int width = FLWM::MethodCallArgUtils::getInt(methodCall, "width");
+            int height = FLWM::MethodCallArgUtils::getInt(methodCall, "height");
+
+            manager.addInputRegion(x, y, width, height);
+        }
+        else if (strcmp(methodName, "subtractInputRegion") == 0) {
+            FLWM::WindowManager manager(windowId);
+            int x = FLWM::MethodCallArgUtils::getInt(methodCall, "x");
+            int y = FLWM::MethodCallArgUtils::getInt(methodCall, "y");
+            int width = FLWM::MethodCallArgUtils::getInt(methodCall, "width");
+            int height = FLWM::MethodCallArgUtils::getInt(methodCall, "height");
+
+            manager.subtractInputRegion(x, y, width, height);
+        }
         else {
             std::cerr << "Method not implemented: " << methodName << std::endl;
             fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::methodNotImplementedError(), NULL);
