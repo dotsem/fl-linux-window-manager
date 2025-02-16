@@ -386,6 +386,7 @@ void FLWM::WindowManager::setInfinteInputRegion() {
   struct wl_surface* wlSurface = gdk_wayland_window_get_wl_surface(gdkWindow);
 
   wl_surface_set_input_region(wlSurface, NULL);
+  wl_surface_commit(wlSurface);
 }
 
 void FLWM::WindowManager::addInputRegion(int x, int y, int width, int height) {
@@ -400,6 +401,7 @@ void FLWM::WindowManager::addInputRegion(int x, int y, int width, int height) {
   struct wl_surface* wlSurface = gdk_wayland_window_get_wl_surface(gdkWindow);
 
   wl_surface_set_input_region(wlSurface, window->inputRegion);
+  wl_surface_commit(wlSurface);
 }
 
 void FLWM::WindowManager::subtractInputRegion(int x, int y, int width, int height) {
@@ -415,4 +417,5 @@ void FLWM::WindowManager::subtractInputRegion(int x, int y, int width, int heigh
   struct wl_surface* wlSurface = gdk_wayland_window_get_wl_surface(gdkWindow);
 
   wl_surface_set_input_region(wlSurface, window->inputRegion);
+  wl_surface_commit(wlSurface);
 }

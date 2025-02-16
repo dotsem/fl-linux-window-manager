@@ -81,7 +81,15 @@ class _MyAppState extends State<MyApp> {
 
                     channel.invokeMethod("SampleMethodName");
                   },
-                  child: Text("Create shared message"))
+                  child: Text("Create shared message")),
+              ElevatedButton(
+                  onPressed: () async {
+                    await FlLinuxWindowManager.instance
+                        .addInputRegion(inputRegion: Rect.zero);
+
+                    channel.invokeMethod("SampleMethodName");
+                  },
+                  child: Text("Input Region"))
             ],
           ),
         ),

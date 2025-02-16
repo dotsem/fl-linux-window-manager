@@ -271,10 +271,10 @@ class FlLinuxWindowManager {
     String windowId = _mainWindowId,
   }) {
     return _methodChannel.invokeMethod('addInputRegion', {
-      'x': inputRegion.left,
-      'y': inputRegion.top,
-      'width': inputRegion.width,
-      'height': inputRegion.height,
+      'x': inputRegion.left.toInt(),
+      'y': inputRegion.top.toInt(),
+      'width': inputRegion.width.toInt(),
+      'height': inputRegion.height.toInt(),
       'windowId': windowId,
     });
   }
@@ -289,10 +289,10 @@ class FlLinuxWindowManager {
     String windowId = _mainWindowId,
   }) {
     return _methodChannel.invokeMethod('subtractInputRegion', {
-      'x': inputRegion.left,
-      'y': inputRegion.top,
-      'width': inputRegion.width,
-      'height': inputRegion.height,
+      'x': inputRegion.left.toInt(),
+      'y': inputRegion.top.toInt(),
+      'width': inputRegion.width.toInt(),
+      'height': inputRegion.height.toInt(),
       'windowId': windowId,
     });
   }
