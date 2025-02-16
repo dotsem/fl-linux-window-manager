@@ -1,4 +1,5 @@
 import 'package:fl_linux_window_manager/fl_linux_window_manager.dart';
+import 'package:fl_linux_window_manager/models/layer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
@@ -8,6 +9,10 @@ List<String> arggg = [];
 
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
+  FlLinuxWindowManager.instance.enableTransparency();
+  FlLinuxWindowManager.instance.setLayer(WindowLayer.top);
+  FlLinuxWindowManager.instance.setSize(width: 800, height: 600);
+  FlLinuxWindowManager.instance.setTitle(title: "sample");
 
   print("Args received: $args");
   arggg.addAll(args);
@@ -86,8 +91,6 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     await FlLinuxWindowManager.instance
                         .addInputRegion(inputRegion: Rect.zero);
-
-                    channel.invokeMethod("SampleMethodName");
                   },
                   child: Text("Input Region"))
             ],
