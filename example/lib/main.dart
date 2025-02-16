@@ -1,5 +1,6 @@
 import 'package:fl_linux_window_manager/fl_linux_window_manager.dart';
 import 'package:fl_linux_window_manager/models/layer.dart';
+import 'package:fl_linux_window_manager/widgets/input_region.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
@@ -41,59 +42,63 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            spacing: 10,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Running on: $_platformVersion\n'),
-              ElevatedButton(
-                onPressed: () {
-                  FlLinuxWindowManager.instance.createWindow(
-                    windowId: "new_window",
-                    title: "Sample",
-                    width: 500,
-                    height: 300,
-                    args: ["--class=sample", "--name=sample"],
-                  );
-                },
-                child: const Text('Create Window'),
-              ),
-              ElevatedButton(
+    return InputRegion.negative(
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Center(
+            child: Column(
+              spacing: 10,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Running on: $_platformVersion\n'),
+                ElevatedButton(
                   onPressed: () {
-                    FlLinuxWindowManager.instance
-                        .hideWindow(windowId: "new_window");
+                    FlLinuxWindowManager.instance.createWindow(
+                      windowId: "new_window",
+                      title: "Sample",
+                      width: 500,
+                      height: 300,
+                      args: ["--class=sample", "--name=sample"],
+                    );
                   },
-                  child: const Text('Hide Window')),
-              ElevatedButton(
-                  onPressed: () {
-                    FlLinuxWindowManager.instance
-                        .showWindow(windowId: "new_window");
-                  },
-                  child: const Text('Show Window')),
-              ElevatedButton(
-                  onPressed: () async {
-                    await FlLinuxWindowManager.instance
-                        .createSharedMethodChannel(
-                            channelName: "shared_example",
-                            shareWithWindowId: "main",
-                            windowId: "new_window");
+                  child: const Text('Create Window'),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      FlLinuxWindowManager.instance
+                          .hideWindow(windowId: "new_window");
+                    },
+                    child: const Text('Hide Window')),
+                ElevatedButton(
+                    onPressed: () {
+                      FlLinuxWindowManager.instance
+                          .showWindow(windowId: "new_window");
+                    },
+                    child: const Text('Show Window')),
+                ElevatedButton(
+                    onPressed: () async {
+                      await FlLinuxWindowManager.instance
+                          .createSharedMethodChannel(
+                              channelName: "shared_example",
+                              shareWithWindowId: "main",
+                              windowId: "new_window");
 
-                    channel.invokeMethod("SampleMethodName");
-                  },
-                  child: Text("Create shared message")),
-              ElevatedButton(
-                  onPressed: () async {
-                    await FlLinuxWindowManager.instance
-                        .addInputRegion(inputRegion: Rect.zero);
-                  },
-                  child: Text("Input Region"))
-            ],
+                      channel.invokeMethod("SampleMethodName");
+                    },
+                    child: Text("Create shared message")),
+                InputRegion(
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        await FlLinuxWindowManager.instance
+                            .addInputRegion(inputRegion: Rect.zero);
+                      },
+                      child: Text("Input Region")),
+                )
+              ],
+            ),
           ),
         ),
       ),
