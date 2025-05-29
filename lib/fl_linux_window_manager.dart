@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fl_linux_window_manager/models/keyboard_mode.dart';
 import 'package:fl_linux_window_manager/models/layer.dart';
 import 'package:flutter/services.dart';
@@ -295,5 +297,39 @@ class FlLinuxWindowManager {
       'height': inputRegion.height.toInt(),
       'windowId': windowId,
     });
+  }
+
+  Future<List<String>> getMonitorList({String windowId = _mainWindowId}) async {
+    // windowId might be needed by the native side to construct WindowManager,
+    // even if the getMonitorList logic itself is global.
+    // Or if getMonitorList was made static native side, windowId might not be needed for this call.
+    try {
+      final List<dynamic>? monitors =
+          await _methodChannel.invokeMethod<List<dynamic>>(
+        'getMonitorList',
+        {'windowId': windowId}, // Pass windowId
+      );
+      return monitors?.cast<String>() ?? [];
+    } catch (e) {
+      log('Failed to get monitor list: $e');
+      return [];
+    }
+  }
+
+  Future<void> setMonitor({
+    String windowId = _mainWindowId,
+    required int monitorId, // -1 to unset/default
+  }) async {
+    try {
+      await _methodChannel.invokeMethod<void>(
+        'setMonitor',
+        {
+          'windowId': windowId,
+          'monitorId': monitorId,
+        },
+      );
+    } catch (e) {
+      log('Failed to set monitor for window $windowId: $e');
+    }
   }
 }

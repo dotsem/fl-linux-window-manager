@@ -5,7 +5,8 @@
 #include <message_handler/method_call_arg_utils.h>
 #include <message_handler/method_response_utils.h>
 
-struct SharedChannelHandlerData {
+struct SharedChannelHandlerData
+{
     /// The window ID to whcich the method call needs to be forwarded.
     std::string forwardWindowId;
 
@@ -17,12 +18,14 @@ struct SharedChannelHandlerData {
  * A proxy method handler that forwards the method call to the given window.
  */
 void sharedMethodChannelHandler(
-    FlMethodChannel* channel,
-    FlMethodCall* methodCall,
-    gpointer userData) {
-    try {
-        const char* methodName = fl_method_call_get_name(methodCall);
-        SharedChannelHandlerData* handlerData = (SharedChannelHandlerData*)userData;
+    FlMethodChannel *channel,
+    FlMethodCall *methodCall,
+    gpointer userData)
+{
+    try
+    {
+        const char *methodName = fl_method_call_get_name(methodCall);
+        SharedChannelHandlerData *handlerData = (SharedChannelHandlerData *)userData;
 
         /// Forward the method call into the given window
         FLWM::WindowManager manager(handlerData->forwardWindowId);
@@ -30,7 +33,8 @@ void sharedMethodChannelHandler(
 
         fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::successResponse(), NULL);
     }
-    catch (...) {
+    catch (...)
+    {
         std::cerr << "An error occurred in while handling shared method channel message" << std::endl;
         g_autoptr(FlMethodErrorResponse) error =
             fl_method_error_response_new("method_not_implemented", "Method not implemented", nullptr);
@@ -39,26 +43,29 @@ void sharedMethodChannelHandler(
 }
 
 void messageHandler(
-    FlMethodChannel* channel,
-    FlMethodCall* methodCall,
-    gpointer userData) {
-    try {
+    FlMethodChannel *channel,
+    FlMethodCall *methodCall,
+    gpointer userData)
+{
+    try
+    {
         /// The method name that needs to be called. This is passed from the dart code.
         /// We need to compare this string and call the required methods.
-        const char* methodName = fl_method_call_get_name(methodCall);
+        const char *methodName = fl_method_call_get_name(methodCall);
 
         /// The ID of the window that needs to be used for performing the action
-        const char* windowId = FLWM::MethodCallArgUtils::getString(methodCall, "windowId");
+        const char *windowId = FLWM::MethodCallArgUtils::getString(methodCall, "windowId");
 
-        if (strcmp(methodName, "createSharedMethodChannel") == 0) {
+        if (strcmp(methodName, "createSharedMethodChannel") == 0)
+        {
             std::string channelName = FLWM::MethodCallArgUtils::getString(methodCall, "channelName");
             std::string shareWithWindowId = FLWM::MethodCallArgUtils::getString(methodCall, "shareWithWindowId");
 
-            SharedChannelHandlerData* destHandlerData = new SharedChannelHandlerData();
+            SharedChannelHandlerData *destHandlerData = new SharedChannelHandlerData();
             destHandlerData->forwardWindowId = shareWithWindowId;
             destHandlerData->channelName = channelName;
 
-            SharedChannelHandlerData* srcHandlerData = new SharedChannelHandlerData();
+            SharedChannelHandlerData *srcHandlerData = new SharedChannelHandlerData();
             srcHandlerData->forwardWindowId = std::string(windowId);
             srcHandlerData->channelName = channelName;
 
@@ -68,7 +75,8 @@ void messageHandler(
             managerSrc.createMethodChannel(channelName, sharedMethodChannelHandler, destHandlerData);
             managerDest.createMethodChannel(channelName, sharedMethodChannelHandler, srcHandlerData);
         }
-        else if (strcmp(methodName, "createWindow") == 0) {
+        else if (strcmp(methodName, "createWindow") == 0)
+        {
             std::string title = FLWM::MethodCallArgUtils::getString(methodCall, "title");
             unsigned int width = FLWM::MethodCallArgUtils::getInt(methodCall, "width");
             unsigned int height = FLWM::MethodCallArgUtils::getInt(methodCall, "height");
@@ -77,26 +85,30 @@ void messageHandler(
 
             FLWM::WindowManager::createWindow(windowId, title, width, height, isLayer, args);
         }
-        else if (strcmp(methodName, "setLayer") == 0) {
+        else if (strcmp(methodName, "setLayer") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             FLWM::Layer layer = (FLWM::Layer)FLWM::MethodCallArgUtils::getInt(methodCall, "layer");
 
             manager.setLayer(layer);
         }
-        else if (strcmp(methodName, "setSize") == 0) {
+        else if (strcmp(methodName, "setSize") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             unsigned int width = FLWM::MethodCallArgUtils::getInt(methodCall, "width");
             unsigned int height = FLWM::MethodCallArgUtils::getInt(methodCall, "height");
 
             manager.setSize(width, height);
         }
-        else if (strcmp(methodName, "setTitle") == 0) {
+        else if (strcmp(methodName, "setTitle") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             std::string title = FLWM::MethodCallArgUtils::getString(methodCall, "title");
 
             manager.setTitle(title);
         }
-        else if (strcmp(methodName, "setLayerMargin") == 0) {
+        else if (strcmp(methodName, "setLayerMargin") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             unsigned int top = FLWM::MethodCallArgUtils::getInt(methodCall, "top");
             unsigned int right = FLWM::MethodCallArgUtils::getInt(methodCall, "right");
@@ -105,56 +117,67 @@ void messageHandler(
 
             manager.setLayerMargin(top, right, bottom, left);
         }
-        else if (strcmp(methodName, "setLayerAnchor") == 0) {
+        else if (strcmp(methodName, "setLayerAnchor") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             int anchor = FLWM::MethodCallArgUtils::getInt(methodCall, "anchor");
 
             manager.setLayerAnchor(anchor);
         }
-        else if (strcmp(methodName, "enableTransparency") == 0) {
+        else if (strcmp(methodName, "enableTransparency") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             manager.enableTransparency();
         }
-        else if (strcmp(methodName, "setIsDecorated") == 0) {
+        else if (strcmp(methodName, "setIsDecorated") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             bool isDecorated = FLWM::MethodCallArgUtils::getBool(methodCall, "isDecorated");
 
             manager.setIsDecorated(isDecorated);
         }
-        else if (strcmp(methodName, "setKeyboardInteractivity") == 0) {
+        else if (strcmp(methodName, "setKeyboardInteractivity") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             FLWM::KeyboardInteractivity interactivity =
                 (FLWM::KeyboardInteractivity)FLWM::MethodCallArgUtils::getInt(methodCall, "interactivity");
 
             manager.setKeyboardInteractivity(interactivity);
         }
-        else if (strcmp(methodName, "enableLayerAutoExclusive") == 0) {
+        else if (strcmp(methodName, "enableLayerAutoExclusive") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             manager.enableLayerAutoExclusive();
         }
-        else if (strcmp(methodName, "setLayerExclusiveZone") == 0) {
+        else if (strcmp(methodName, "setLayerExclusiveZone") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             int length = FLWM::MethodCallArgUtils::getInt(methodCall, "length");
 
             manager.setLayerExclusiveZone(length);
         }
-        else if (strcmp(methodName, "closeWindow") == 0) {
+        else if (strcmp(methodName, "closeWindow") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             manager.closeWindow();
         }
-        else if (strcmp(methodName, "hideWindow") == 0) {
+        else if (strcmp(methodName, "hideWindow") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             manager.hideWindow();
         }
-        else if (strcmp(methodName, "showWindow") == 0) {
+        else if (strcmp(methodName, "showWindow") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             manager.showWindow();
         }
-        else if (strcmp(methodName, "setInfinteInputRegion") == 0) {
+        else if (strcmp(methodName, "setInfinteInputRegion") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             manager.setInfinteInputRegion();
         }
-        else if (strcmp(methodName, "addInputRegion") == 0) {
+        else if (strcmp(methodName, "addInputRegion") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             int x = FLWM::MethodCallArgUtils::getInt(methodCall, "x");
             int y = FLWM::MethodCallArgUtils::getInt(methodCall, "y");
@@ -163,7 +186,8 @@ void messageHandler(
 
             manager.addInputRegion(x, y, width, height);
         }
-        else if (strcmp(methodName, "subtractInputRegion") == 0) {
+        else if (strcmp(methodName, "subtractInputRegion") == 0)
+        {
             FLWM::WindowManager manager(windowId);
             int x = FLWM::MethodCallArgUtils::getInt(methodCall, "x");
             int y = FLWM::MethodCallArgUtils::getInt(methodCall, "y");
@@ -172,7 +196,41 @@ void messageHandler(
 
             manager.subtractInputRegion(x, y, width, height);
         }
-        else {
+        else if (strcmp(methodName, "getMonitorList") == 0)
+        {
+            // Note: windowId is technically not needed here but FLWM::WindowManager constructor expects it.
+            // We can pass any valid/existing windowId or the main one.
+            // Or, make getMonitorList a static method in WindowManager.
+            // For now, assuming windowId from args is available and valid for constructing WindowManager.
+            FLWM::WindowManager manager(windowId); // Needs a windowId to construct
+            g_autoptr(FlValue) monitors = manager.getMonitorList();
+            fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::successResponse(monitors), NULL); // Assuming successResponse can take FlValue*
+            // If MethodResponseUtils::successResponse can't directly take FlValue*, you'd do:
+            // fl_method_call_respond(methodCall, fl_method_success_response_new(monitors), NULL);
+            return; // Important: add return to prevent falling through to successResponse() at the end
+        }
+        else if (strcmp(methodName, "getMonitorList") == 0)
+        {
+            FLWM::WindowManager manager(windowId); // Needs a windowId to construct
+            // manager.getMonitorList() should return a ref'd FlValue*
+            // (e.g., using fl_value_ref or g_autoptr(FlValue) which is then .get() and ref'd)
+            g_autoptr(FlValue) monitors_value = manager.getMonitorList();
+
+            // This assumes you have: FLWM::MethodResponseUtils::successResponse(FlValue* value)
+            // which internally calls fl_method_success_response_new(value)
+            fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::successResponse(monitors_value), NULL);
+            return;
+        }
+        else if (strcmp(methodName, "setMonitor") == 0)
+        {
+            FLWM::WindowManager manager(windowId); // windowId is already extracted
+            int monitor_id_arg = FLWM::MethodCallArgUtils::getInt(methodCall, "monitorId");
+            manager.setMonitor(monitor_id_arg);
+            // successResponse() is called at the end of the try block, so no need to call it here explicitly
+            // unless setMonitor needs to return a specific value.
+        }
+        else
+        {
             std::cerr << "Method not implemented: " << methodName << std::endl;
             fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::methodNotImplementedError(), NULL);
             return;
@@ -182,7 +240,8 @@ void messageHandler(
         fl_method_call_respond(methodCall, FLWM::MethodResponseUtils::successResponse(), NULL);
     }
 
-    catch (...) {
+    catch (...)
+    {
         std::cerr << "An error occurred in while handling method channel message" << std::endl;
         g_autoptr(FlMethodErrorResponse) error =
             fl_method_error_response_new("method_not_implemented", "Method not implemented", nullptr);

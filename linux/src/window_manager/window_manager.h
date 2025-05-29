@@ -17,10 +17,12 @@
  *
  * So the definition of this function is not available in this plugin.
  */
-void fl_register_plugins(FlPluginRegistry* registry);
+void fl_register_plugins(FlPluginRegistry *registry);
 
-namespace FLWM {
-    struct Window {
+namespace FLWM
+{
+    struct Window
+    {
         /**
          * A unique identifier for the window. This is used to identify the window in the window manager.
          */
@@ -29,41 +31,45 @@ namespace FLWM {
         /**
          * The actual GTK window object that is created by the window manager.
          */
-        GtkWindow* window;
+        GtkWindow *window;
 
         /**
          * The input region associated with the window. This is used to control the area of the
          * window that can receive input events.
          */
-        wl_region* inputRegion;
+        wl_region *inputRegion;
 
         /**
          * Stores the method channels created by the user for this window.
          */
-        std::map<std::string, FlMethodChannel*> methodChannels;
+        std::map<std::string, FlMethodChannel *> methodChannels;
     };
 
-    enum __attribute__((visibility("default"))) Layer {
+    enum __attribute__((visibility("default"))) Layer
+    {
         LAYER_BACKGROUND = 1,
-            LAYER_BOTTOM,
-            LAYER_TOP,
-            LAYER_OVERLAY
+        LAYER_BOTTOM,
+        LAYER_TOP,
+        LAYER_OVERLAY
     };
 
-    enum __attribute__((visibility("default"))) ScreenEdge {
+    enum __attribute__((visibility("default"))) ScreenEdge
+    {
         SCREEN_EDGE_TOP = 1 << 0,
-            SCREEN_EDGE_RIGHT = 1 << 1,
-            SCREEN_EDGE_BOTTOM = 1 << 2,
-            SCREEN_EDGE_LEFT = 1 << 3,
+        SCREEN_EDGE_RIGHT = 1 << 1,
+        SCREEN_EDGE_BOTTOM = 1 << 2,
+        SCREEN_EDGE_LEFT = 1 << 3,
     };
 
-    enum __attribute__((visibility("default"))) KeyboardInteractivity {
+    enum __attribute__((visibility("default"))) KeyboardInteractivity
+    {
         NONE,
-            EXCLUSIVE,
-            ON_DEMAND
+        EXCLUSIVE,
+        ON_DEMAND
     };
 
-    class __attribute__((visibility("default"))) WindowManager {
+    class __attribute__((visibility("default"))) WindowManager
+    {
     public:
         /**
          * Create a new window manager instance for the given window ID.
@@ -73,7 +79,8 @@ namespace FLWM {
         /**
          * The compositor object that is used to create the wayland objects.
          */
-        static wl_compositor* compositor;
+        static wl_compositor *compositor;
+
     private:
         /**
          * A map of all windows created by this application. This is used to keep track of all windows
@@ -81,29 +88,28 @@ namespace FLWM {
          */
         static std::map<std::string, Window> windows;
 
-
         /**
          * The window that needs to be managed, by this instance of window manager.
          */
-        Window* window;
+        Window *window;
 
     public:
         /**
          * Add a new window to the list of windows managed by the window manager.
          */
-        static void addWindow(GtkWindow * window, std::string id);
+        static void addWindow(GtkWindow *window, std::string id);
 
         /**
          * Converts the role of the window to a layer shell surface.
          */
-        static void convertToLayer(GtkWindow * window);
+        static void convertToLayer(GtkWindow *window);
 
         static void createWindow(std::string id,
-            std::string title,
-            unsigned int width,
-            unsigned int height,
-            bool isLayer,
-            std::vector<std::string> args);
+                                 std::string title,
+                                 unsigned int width,
+                                 unsigned int height,
+                                 bool isLayer,
+                                 std::vector<std::string> args);
 
         /**
          * Change the layer of the window to the given layer.
@@ -174,12 +180,12 @@ namespace FLWM {
         /**
          * Create a new method channel in the platform side for this window.
          */
-        void createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler, void* userData);
+        void createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler, void *userData);
 
         /**
          * Send a method call to the given channel.
          */
-        void sendMethodCall(std::string channelName, std::string methodName, FlValue * args);
+        void sendMethodCall(std::string channelName, std::string methodName, FlValue *args);
 
         /**
          * Disable inputs for the window.
@@ -197,5 +203,15 @@ namespace FLWM {
          * Subtract the given region from the input region of the window.
          */
         void subtractInputRegion(int x, int y, int width, int height);
+
+        /**
+         * Method to get monitor list
+         */
+        FlValue *getMonitorList();
+        /**
+         * Method to set monitor list
+         */
+        void setMonitor(int monitor_index);
     };
+
 }
