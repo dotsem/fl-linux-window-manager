@@ -178,6 +178,16 @@ namespace FLWM
         void showWindow();
 
         /**
+         * Returns if a window is visible
+         */
+        FlValue* isVisible();
+
+        /**
+         * Focuses a window
+         */
+        void setFocus();
+
+        /**
          * Create a new method channel in the platform side for this window.
          */
         void createMethodChannel(std::string channelName, FlMethodChannelMethodCallHandler handler, void *userData);

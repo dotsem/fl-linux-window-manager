@@ -12,8 +12,7 @@ class FlLinuxWindowManager {
   static int _windowIdCounter = 1;
 
   /// The method channel used to communicate with the platform side.
-  final MethodChannel _methodChannel =
-      const MethodChannel('fl_linux_window_manager');
+  final MethodChannel _methodChannel = const MethodChannel('fl_linux_window_manager');
 
   /// Private constructor
   FlLinuxWindowManager._();
@@ -34,28 +33,14 @@ class FlLinuxWindowManager {
   /// and returned as the result.
   ///
   /// Returns a future with the window ID of the created window.
-  Future<String> createWindow({
-    required String title,
-    required int width,
-    required int height,
-    bool isLayer = false,
-    List<String> args = const [],
-    String? windowId,
-  }) async {
+  Future<String> createWindow({required String title, required int width, required int height, bool isLayer = false, List<String> args = const [], String? windowId}) async {
     /// Setup the window ID for the new window
     windowId ??= 'window_$_windowIdCounter';
 
     /// Increment the window ID counter
     _windowIdCounter++;
 
-    await _methodChannel.invokeMethod('createWindow', {
-      'title': title,
-      'width': width,
-      'height': height,
-      'isLayer': isLayer,
-      'args': args,
-      'windowId': windowId,
-    });
+    await _methodChannel.invokeMethod('createWindow', {'title': title, 'width': width, 'height': height, 'isLayer': isLayer, 'args': args, 'windowId': windowId});
 
     return windowId;
   }
@@ -64,14 +49,8 @@ class FlLinuxWindowManager {
   ///
   /// The [layer] is the layer to set the window to.
   /// The [windowId] is the ID of the window.
-  Future<void> setLayer(
-    WindowLayer layer, {
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setLayer', {
-      'layer': layer.layerId,
-      'windowId': windowId,
-    });
+  Future<void> setLayer(WindowLayer layer, {String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setLayer', {'layer': layer.layerId, 'windowId': windowId});
   }
 
   /// Set the size of the window with the given window ID.
@@ -79,30 +58,16 @@ class FlLinuxWindowManager {
   /// The [width] is the width of the window.
   /// The [height] is the height of the window.
   /// The [windowId] is the ID of the window.
-  Future<void> setSize({
-    required int width,
-    required int height,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setSize', {
-      'width': width,
-      'height': height,
-      'windowId': windowId,
-    });
+  Future<void> setSize({required int width, required int height, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setSize', {'width': width, 'height': height, 'windowId': windowId});
   }
 
   /// Set the title of the window with the given window ID.
   ///
   /// The [title] is the title of the window.
   /// The [windowId] is the ID of the window.
-  Future<void> setTitle({
-    required String title,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setTitle', {
-      'title': title,
-      'windowId': windowId,
-    });
+  Future<void> setTitle({required String title, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setTitle', {'title': title, 'windowId': windowId});
   }
 
   /// Set the margin for the layer with the given window ID.
@@ -112,20 +77,8 @@ class FlLinuxWindowManager {
   /// The [right] is the right margin of the layer.
   /// The [bottom] is the bottom margin of the layer.
   /// The [windowId] is the ID of the window.
-  Future<void> setLayerMargin({
-    int left = 0,
-    int top = 0,
-    int right = 0,
-    int bottom = 0,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setLayerMargin', {
-      'left': left,
-      'top': top,
-      'right': right,
-      'bottom': bottom,
-      'windowId': windowId,
-    });
+  Future<void> setLayerMargin({int left = 0, int top = 0, int right = 0, int bottom = 0, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setLayerMargin', {'left': left, 'top': top, 'right': right, 'bottom': bottom, 'windowId': windowId});
   }
 
   /// Set the anchor for the layer with the given window ID.
@@ -136,49 +89,29 @@ class FlLinuxWindowManager {
   /// If set to 0, then all anchors will be cleared.
   ///
   /// The [windowId] is the ID of the window.
-  Future<void> setLayerAnchor({
-    int anchor = 0,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setLayerAnchor', {
-      'anchor': anchor,
-      'windowId': windowId,
-    });
+  Future<void> setLayerAnchor({int anchor = 0, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setLayerAnchor', {'anchor': anchor, 'windowId': windowId});
   }
 
   /// Enable transparency for the window with the given window ID.
   Future<void> enableTransparency({String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('enableTransparency', {
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('enableTransparency', {'windowId': windowId});
   }
 
   /// Set if the window with the given window ID is decorated.
   /// The decoration includes the title bar and the window controls like the close button, minimize button, etc.
   ///
   /// The [isDecorated] is a flag to indicate if the window is decorated.
-  Future<void> setIsDecorated({
-    required bool isDecorated,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setIsDecorated', {
-      'isDecorated': isDecorated,
-      'windowId': windowId,
-    });
+  Future<void> setIsDecorated({required bool isDecorated, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setIsDecorated', {'isDecorated': isDecorated, 'windowId': windowId});
   }
 
   /// Set the keyboard interactivity for the window with the given window ID.
   ///
   /// The [mode] is the keyboard interactivity mode to set.
   /// The [windowId] is the ID of the window.
-  Future<void> setKeyboardInteractivity(
-    KeyboardMode mode, {
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('setKeyboardInteractivity', {
-      'interactivity': mode.value,
-      'windowId': windowId,
-    });
+  Future<void> setKeyboardInteractivity(KeyboardMode mode, {String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setKeyboardInteractivity', {'interactivity': mode.value, 'windowId': windowId});
   }
 
   /// Enable exclusive zone for the layer, with the given window ID.
@@ -186,9 +119,7 @@ class FlLinuxWindowManager {
   ///
   /// The [windowId] is the ID of the window.
   Future<void> enableLayerAutoExclusive({String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('enableLayerAutoExclusive', {
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('enableLayerAutoExclusive', {'windowId': windowId});
   }
 
   /// Set a manual exclusive zone for the layer, with the given window ID.
@@ -197,30 +128,22 @@ class FlLinuxWindowManager {
   /// layer shell protocol docs for more information)
   ///
   /// The [windowId] is the ID of the window.
-  Future<void> setLayerExclusiveZone(int value,
-      {String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('setLayerExclusiveZone', {
-      'length': value,
-      'windowId': windowId,
-    });
+  Future<void> setLayerExclusiveZone(int value, {String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setLayerExclusiveZone', {'length': value, 'windowId': windowId});
   }
 
   /// Close the window with the given window ID.
   ///
   /// The [windowId] is the ID of the window.
   Future<void> closeWindow({String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('closeWindow', {
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('closeWindow', {'windowId': windowId});
   }
 
   /// Hides and window with the given window ID.
   ///
   /// The [windowId] is the ID of the window.
   Future<void> hideWindow({String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('hideWindow', {
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('hideWindow', {'windowId': windowId});
   }
 
   /// Shows the window with the given window ID.
@@ -228,9 +151,23 @@ class FlLinuxWindowManager {
   ///
   /// The [windowId] is the ID of the window.
   Future<void> showWindow({String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('showWindow', {
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('showWindow', {'windowId': windowId});
+  }
+
+  /// Returns if the window with the given window ID is visible.
+  /// It does not check if it is obscured by another window.
+  ///
+  /// The [windowId] is the ID of the window.
+  Future<bool> isVisible({String windowId = _mainWindowId}) async {
+    final result = await _methodChannel.invokeMethod<bool>('isVisible', {'windowId': windowId});
+    return result ?? false;
+  }
+
+  /// Sets the focus to the window with the given window ID.
+  ///
+  /// The [windowId] is the ID of the window.
+  Future<void> setFocus({String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('setFocus', {'windowId': windowId});
   }
 
   /// Creates a shared method channel with the given window, so that we an communicate with the window.
@@ -239,28 +176,19 @@ class FlLinuxWindowManager {
   /// The [channelName] is the name of the new channel.
   /// The [shareWithWindowId] is the ID of the window to share the channel with.
   /// The [windowId] is the ID of the current window.
-  Future<void> createSharedMethodChannel(
-      {required String channelName,
-      required String shareWithWindowId,
-      String windowId = _mainWindowId}) {
+  Future<void> createSharedMethodChannel({required String channelName, required String shareWithWindowId, String windowId = _mainWindowId}) {
     if (windowId == shareWithWindowId) {
       throw Exception('Cannot share a channel with the same window');
     }
 
-    return _methodChannel.invokeMethod('createSharedMethodChannel', {
-      'channelName': channelName,
-      'shareWithWindowId': shareWithWindowId,
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('createSharedMethodChannel', {'channelName': channelName, 'shareWithWindowId': shareWithWindowId, 'windowId': windowId});
   }
 
   /// Set infinite input region for the window with the given window ID.
   ///
   /// The [windowId] is the ID of the window.
   Future<void> setInfiniteInputRegion({String windowId = _mainWindowId}) {
-    return _methodChannel.invokeMethod('setInfiniteInputRegion', {
-      'windowId': windowId,
-    });
+    return _methodChannel.invokeMethod('setInfiniteInputRegion', {'windowId': windowId});
   }
 
   /// Add a given rect to the input region of the window with the given window ID.
@@ -268,17 +196,8 @@ class FlLinuxWindowManager {
   ///
   /// The [inputRegion] is the rect to add to the input region.
   /// The [windowId] is the ID of the window.
-  Future<void> addInputRegion({
-    required Rect inputRegion,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('addInputRegion', {
-      'x': inputRegion.left.toInt(),
-      'y': inputRegion.top.toInt(),
-      'width': inputRegion.width.toInt(),
-      'height': inputRegion.height.toInt(),
-      'windowId': windowId,
-    });
+  Future<void> addInputRegion({required Rect inputRegion, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('addInputRegion', {'x': inputRegion.left.toInt(), 'y': inputRegion.top.toInt(), 'width': inputRegion.width.toInt(), 'height': inputRegion.height.toInt(), 'windowId': windowId});
   }
 
   /// Subtract a given rect from the input region of the window with the given window ID.
@@ -286,17 +205,8 @@ class FlLinuxWindowManager {
   ///
   /// The [inputRegion] is the rect to subtract from the input region.
   /// The [windowId] is the ID of the window.
-  Future<void> subtractInputRegion({
-    required Rect inputRegion,
-    String windowId = _mainWindowId,
-  }) {
-    return _methodChannel.invokeMethod('subtractInputRegion', {
-      'x': inputRegion.left.toInt(),
-      'y': inputRegion.top.toInt(),
-      'width': inputRegion.width.toInt(),
-      'height': inputRegion.height.toInt(),
-      'windowId': windowId,
-    });
+  Future<void> subtractInputRegion({required Rect inputRegion, String windowId = _mainWindowId}) {
+    return _methodChannel.invokeMethod('subtractInputRegion', {'x': inputRegion.left.toInt(), 'y': inputRegion.top.toInt(), 'width': inputRegion.width.toInt(), 'height': inputRegion.height.toInt(), 'windowId': windowId});
   }
 
   Future<List<String>> getMonitorList({String windowId = _mainWindowId}) async {
@@ -304,8 +214,7 @@ class FlLinuxWindowManager {
     // even if the getMonitorList logic itself is global.
     // Or if getMonitorList was made static native side, windowId might not be needed for this call.
     try {
-      final List<dynamic>? monitors =
-          await _methodChannel.invokeMethod<List<dynamic>>(
+      final List<dynamic>? monitors = await _methodChannel.invokeMethod<List<dynamic>>(
         'getMonitorList',
         {'windowId': windowId}, // Pass windowId
       );
@@ -321,13 +230,7 @@ class FlLinuxWindowManager {
     required int monitorId, // -1 to unset/default
   }) async {
     try {
-      await _methodChannel.invokeMethod<void>(
-        'setMonitor',
-        {
-          'windowId': windowId,
-          'monitorId': monitorId,
-        },
-      );
+      await _methodChannel.invokeMethod<void>('setMonitor', {'windowId': windowId, 'monitorId': monitorId});
     } catch (e) {
       log('Failed to set monitor for window $windowId: $e');
     }
