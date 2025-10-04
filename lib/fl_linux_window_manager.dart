@@ -23,6 +23,14 @@ class FlLinuxWindowManager {
   /// Getter for the single instance of the class
   static FlLinuxWindowManager get instance => _instance;
 
+  /// Returns if the window with the given window ID is used.
+  ///
+  /// The [windowId] is the ID of the window.
+  Future<bool> isWindowIdUsed(String windowId) async {
+    final result = await _methodChannel.invokeMethod<bool>('isWindowIdUsed', {'id': windowId});
+    return result ?? false;
+  }
+
   /// Create a window with the given title, width, and height.
   ///
   /// The [title] is the title of the window.

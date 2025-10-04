@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string.h>
 
@@ -151,6 +150,11 @@ void FLWM::WindowManager::setTitle(std::string title) {
 
 void FLWM::WindowManager::setIsDecorated(bool isDecorated) {
   gtk_window_set_decorated(window->window, isDecorated);
+}
+
+FlValue *FLWM::WindowManager::isWindowIdUsed(std::string id) {
+  bool used = windows.find(id) != windows.end();
+  return fl_value_new_bool(used);
 }
 
 void FLWM::WindowManager::createWindow(std::string id, std::string title,
@@ -352,7 +356,7 @@ FlValue *FLWM::WindowManager::isVisible() {
 
   bool visible = gtk_widget_is_visible(GTK_WIDGET(window->window));
   return fl_value_new_bool(
-      visible); // Just return FlValue*, not FlMethodResponse*
+      visible); 
 }
 
 void FLWM::WindowManager::setFocus() {

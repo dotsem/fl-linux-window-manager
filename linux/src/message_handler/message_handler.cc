@@ -77,7 +77,28 @@ void messageHandler(FlMethodChannel *channel, FlMethodCall *methodCall,
       fl_method_call_respond(methodCall,
                            FLWM::MethodResponseUtils::successResponse(), NULL);
       return;
-    } else if (strcmp(methodName, "createWindow") == 0) {
+    }else if (strcmp(methodName, "isWindowIdUsed") == 0) {
+      FlValue *result = nullptr;
+      FlMethodResponse *response = nullptr;
+
+      std::string id =
+          FLWM::MethodCallArgUtils::getString(methodCall, "id");
+
+      try {
+        result = FLWM::WindowManager::isWindowIdUsed(id);
+        response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+      } catch (...) {
+        response = FL_METHOD_RESPONSE(fl_method_error_response_new(
+            "WINDOW_ERROR", "Failed to check if window id is used", nullptr));
+      }
+
+      if (response != nullptr) {
+        fl_method_call_respond(methodCall, response, nullptr);
+        g_object_unref(response);
+      }
+      return;
+    } 
+     else if (strcmp(methodName, "createWindow") == 0) {
       std::string title =
           FLWM::MethodCallArgUtils::getString(methodCall, "title");
       unsigned int width =

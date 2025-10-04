@@ -104,6 +104,11 @@ namespace FLWM
          */
         static void convertToLayer(GtkWindow *window);
 
+        /**
+         * Returns if a windowId is used or not.
+         */
+        static FlValue* isWindowIdUsed(std::string id);
+
         static void createWindow(std::string id,
                                  std::string title,
                                  unsigned int width,
