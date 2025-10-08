@@ -14,6 +14,18 @@ class InputRegionController {
   /// that is we should disable inputs in this region.
   static final List<GlobalKey> _negativeRegionKeys = [];
 
+  /// The window ID whose input region will be updated by this controller.
+  static String _windowId = 'main';
+
+  /// Configure the controller to target the input region of the given window.
+  ///
+  /// Each Flutter window runs in its own isolate, so invoking this from the
+  /// respective window isolate will scope all subsequent input region updates
+  /// to that window only.
+  static void configure({required String windowId}) {
+    _windowId = windowId;
+  }
+
   /// Adds a global key to the list of keys.
   static void addKey(
     GlobalKey key, {
@@ -63,9 +75,11 @@ class InputRegionController {
       );
 
       if (item.isNegative) {
-        FlLinuxWindowManager.instance.subtractInputRegion(inputRegion: region);
+        FlLinuxWindowManager.instance
+            .subtractInputRegion(inputRegion: region, windowId: _windowId);
       } else {
-        FlLinuxWindowManager.instance.addInputRegion(inputRegion: region);
+        FlLinuxWindowManager.instance
+            .addInputRegion(inputRegion: region, windowId: _windowId);
       }
     }
   }

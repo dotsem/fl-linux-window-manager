@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 class InputRegion extends StatefulWidget {
   final Widget child;
   final bool _isNegative;
+  final String? windowId;
 
-  const InputRegion({super.key, required this.child}) : _isNegative = false;
-  const InputRegion.negative({super.key, required this.child})
+  const InputRegion({super.key, required this.child, this.windowId})
+      : _isNegative = false;
+  const InputRegion.negative({super.key, required this.child, this.windowId})
       : _isNegative = true;
 
   @override
@@ -22,6 +24,10 @@ class _InputRegionState extends State<InputRegion> {
 
     /// Setup a new global key for this widget.
     _key = GlobalKey();
+
+    if (widget.windowId != null) {
+      InputRegionController.configure(windowId: widget.windowId!);
+    }
 
     InputRegionController.addKey(
       _key,
